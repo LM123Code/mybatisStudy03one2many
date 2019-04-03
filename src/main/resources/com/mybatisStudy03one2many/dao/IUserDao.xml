@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatisStudy03one2many.dao.IUserDao">
+    <!--定义用户的resultMap,实现一对多映射-->
+    <resultMap id="userAccountsMap" type="com.mybatisStudy03one2many.domain.User">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="sex" column="sex"></result>
+        <result property="address" column="address"></result>
+        <!--配置用户中账户集合的映射-->
+        <collection property="accounts" ofType="com.mybatisStudy03one2many.domain.Account">
+            <id property="id" column="aid"></id>
+            <result property="uid" column="uid"></result>
+            <result property="money" column="money"></result>
+        </collection>
+    </resultMap>
+    <!--查询所有，用户和账户一对多查询-->
+    <select id="findAll" resultMap="userAccountsMap">
+        select u.*, a.ID as aid, a.UID, a.MONEY from user u left join account a on u.id = a.UID
+    </select>
+    <!--根据id查询用户-->
+    <select id="findById" parameterType="int" resultType="com.mybatisStudy03one2many.domain.User">
+        select * from user where id = #{id}
+    </select>
+</mapper>
